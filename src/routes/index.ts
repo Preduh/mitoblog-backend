@@ -1,8 +1,8 @@
 import { Router } from 'express'
-import { authRouter } from './auth.routes'
+import { mitinhoRouter } from '../modules/mitinhos/routes'
 
 const router = Router()
 
-router.use('/auth', authRouter)
+router.use('/mitinho', mitinhoRouter)
 
 export { router }
