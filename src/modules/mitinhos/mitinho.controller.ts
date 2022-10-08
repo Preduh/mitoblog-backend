@@ -18,6 +18,8 @@ export class MitinhoController {
       username
     })
 
+    if (result instanceof Error) return response.json({ error: result.message })
+
     return response.json(result)
   }
 }

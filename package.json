@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "test": "vitest",
-    "lint": "eslint ./src --fix",
+    "lint": "eslint ./src/**/*.ts --fix",
     "commit": "git-cz",
     "prepare": "husky install"
   },
