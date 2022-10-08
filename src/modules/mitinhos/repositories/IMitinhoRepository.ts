@@ -15,4 +15,5 @@ export interface MitinhoSave {
 
 export interface IMitinhoRepository {
   save: (data: MitinhoCreate) => Promise<MitinhoSave>
+  findByUsername: (username: string) => Promise<MitinhoSave | null>
 }

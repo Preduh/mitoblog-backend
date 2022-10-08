@@ -6,7 +6,7 @@ import {
 import { randomUUID } from 'crypto'
 
 export class MitinhoInMemoryRepository implements IMitinhoRepository {
-  mitinhos: any[] = []
+  mitinhos: MitinhoSave[] = []
 
   async save (data: MitinhoCreate): Promise<MitinhoSave> {
     const mitinho: MitinhoSave = {
@@ -19,5 +19,14 @@ export class MitinhoInMemoryRepository implements IMitinhoRepository {
     this.mitinhos.push(mitinho)
 
     return mitinho
+  }
+
+  async findByUsername (username: string): Promise<MitinhoSave | null> {
+    const mitinho = this.mitinhos.find(
+      (mitinho) => mitinho.username === username
+    )
+
+    if (mitinho !== undefined) return mitinho
+    return null
   }
 }
