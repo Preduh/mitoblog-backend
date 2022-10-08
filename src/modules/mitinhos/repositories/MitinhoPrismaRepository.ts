@@ -19,4 +19,14 @@ export class MitinhoPrismaRepository implements IMitinhoRepository {
 
     return mitinho
   }
+
+  async findByEmail (email: string): Promise<MitinhoSave | null> {
+    const mitinho: MitinhoSave | null = await prismaClient.mitinhos.findFirst({
+      where: {
+        email
+      }
+    })
+
+    return mitinho
+  }
 }

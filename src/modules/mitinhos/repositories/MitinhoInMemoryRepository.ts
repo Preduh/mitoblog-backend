@@ -29,4 +29,13 @@ export class MitinhoInMemoryRepository implements IMitinhoRepository {
     if (mitinho !== undefined) return mitinho
     return null
   }
+
+  async findByEmail (email: string): Promise<MitinhoSave | null> {
+    const mitinho = this.mitinhos.find(
+      (mitinho) => mitinho.email === email
+    )
+
+    if (mitinho !== undefined) return mitinho
+    return null
+  }
 }

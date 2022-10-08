@@ -40,6 +40,29 @@ describe('Create Mitinho', () => {
 
     const result = await createMitinhoService.execute(secondMitinho)
 
-    expect(result).instanceOf(AlreadyExistingFieldError)
+    expect(result).toEqual(new AlreadyExistingFieldError('username'))
+  })
+
+  it('Should not be able to create a new mitinho if email already exists', async () => {
+    const mitinhoInMemoryRepository = new MitinhoInMemoryRepository()
+    const createMitinhoService = new CreateMitinhoService(mitinhoInMemoryRepository)
+
+    const firstMitinho: MitinhoCreate = {
+      username: 'any_username',
+      email: 'any_email',
+      password: 'any_password'
+    }
+
+    await createMitinhoService.execute(firstMitinho)
+
+    const secondMitinho: MitinhoCreate = {
+      username: 'other_username',
+      email: 'any_email',
+      password: 'other_password'
+    }
+
+    const result = await createMitinhoService.execute(secondMitinho)
+
+    expect(result).toEqual(new AlreadyExistingFieldError('email'))
   })
 })
