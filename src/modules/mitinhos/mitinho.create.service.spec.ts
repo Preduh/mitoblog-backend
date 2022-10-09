@@ -3,6 +3,7 @@ import { CreateMitinhoService } from './mitinho.create.service'
 import { MitinhoInMemoryRepository } from './repositories/MitinhoInMemoryRepository'
 import { MitinhoCreate } from './repositories/IMitinhoRepository'
 import { AlreadyExistingFieldError } from '../errors/alreadyExistingFieldError'
+import { MissingParamError } from '../errors/missingParamError'
 
 describe('Create Mitinho', () => {
   it('Should be able to create a new mitinho', async () => {
@@ -64,5 +65,19 @@ describe('Create Mitinho', () => {
     const result = await createMitinhoService.execute(secondMitinho)
 
     expect(result).toEqual(new AlreadyExistingFieldError('email'))
+  })
+
+  it('Should not be able to create a new mitinho if username is not provided', async () => {
+    const mitinhoInMemoryRepository = new MitinhoInMemoryRepository()
+    const createMitinhoService = new CreateMitinhoService(mitinhoInMemoryRepository)
+
+    const firstMitinho = {
+      email: 'any_email',
+      password: 'any_password'
+    }
+
+    const result = await createMitinhoService.execute(firstMitinho as MitinhoCreate)
+
+    expect(result).toEqual(new MissingParamError('username'))
   })
 })

@@ -1,10 +1,13 @@
 import { AlreadyExistingFieldError } from '../errors/alreadyExistingFieldError'
+import { MissingParamError } from '../errors/missingParamError'
 import { IMitinhoRepository, MitinhoCreate, MitinhoSave } from './repositories/IMitinhoRepository'
 
 export class CreateMitinhoService {
   constructor (private readonly mitinhoRepository: IMitinhoRepository) {}
 
   async execute (data: MitinhoCreate): Promise<MitinhoSave | Error> {
+    if (!data.username) return new MissingParamError('username')
+
     const usernameAlreadyExists = await this.mitinhoRepository.findByUsername(data.username)
     if (usernameAlreadyExists) return new AlreadyExistingFieldError('username')
 
