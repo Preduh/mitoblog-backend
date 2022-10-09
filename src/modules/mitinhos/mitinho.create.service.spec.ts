@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
-import { CreateMitinhoService } from './mitinho.create.service'
+import { CreateMitinhoService, Result } from './mitinho.create.service'
 import { MitinhoInMemoryRepository } from './repositories/MitinhoInMemoryRepository'
-import { MitinhoCreate, MitinhoSave } from './repositories/IMitinhoRepository'
+import { MitinhoCreate } from './repositories/IMitinhoRepository'
 import { AlreadyExistingFieldError } from '../errors/alreadyExistingFieldError'
 import { MissingParamError } from '../errors/missingParamError'
 import bcrypt from 'bcrypt'
@@ -17,9 +17,9 @@ describe('Create Mitinho', () => {
       password: 'any_password'
     }
 
-    const result = await createMitinhoService.execute(mitinho)
+    const result = await createMitinhoService.execute(mitinho) as Result
 
-    expect(result).toHaveProperty('id')
+    expect(result.mitinho).toHaveProperty('id')
   })
 
   it('Should not be able to create a new mitinho if username already exists', async () => {
@@ -92,10 +92,26 @@ describe('Create Mitinho', () => {
       password: 'any_password'
     }
 
-    const result = await createMitinhoService.execute(firstMitinho as MitinhoCreate) as MitinhoSave
+    const result = await createMitinhoService.execute(firstMitinho as MitinhoCreate) as Result
 
-    const passwordIsEncrypted = await bcrypt.compare(firstMitinho.password, result.password)
+    const passwordIsEncrypted = await bcrypt.compare(firstMitinho.password, result.mitinho.password)
 
     expect(passwordIsEncrypted).toBeTruthy()
+  })
+
+  it('Should not be able to ensure the token is returned', async () => {
+    const mitinhoInMemoryRepository = new MitinhoInMemoryRepository()
+    const createMitinhoService = new CreateMitinhoService(mitinhoInMemoryRepository)
+
+    const firstMitinho = {
+      username: 'any_username',
+      email: 'any_email',
+      password: 'any_password'
+    }
+
+    const result = await createMitinhoService.execute(firstMitinho as MitinhoCreate)
+
+    expect(result).toHaveProperty('token')
+    expect(result).toHaveProperty('mitinho')
   })
 })
