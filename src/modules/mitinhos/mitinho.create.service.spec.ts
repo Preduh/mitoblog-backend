@@ -1,9 +1,10 @@
 import { describe, it, expect } from 'vitest'
 import { CreateMitinhoService } from './mitinho.create.service'
 import { MitinhoInMemoryRepository } from './repositories/MitinhoInMemoryRepository'
-import { MitinhoCreate } from './repositories/IMitinhoRepository'
+import { MitinhoCreate, MitinhoSave } from './repositories/IMitinhoRepository'
 import { AlreadyExistingFieldError } from '../errors/alreadyExistingFieldError'
 import { MissingParamError } from '../errors/missingParamError'
+import bcrypt from 'bcrypt'
 
 describe('Create Mitinho', () => {
   it('Should be able to create a new mitinho', async () => {
@@ -79,5 +80,22 @@ describe('Create Mitinho', () => {
     const result = await createMitinhoService.execute(firstMitinho as MitinhoCreate)
 
     expect(result).toEqual(new MissingParamError('username'))
+  })
+
+  it('Should not be able to ensure the password was encrypted', async () => {
+    const mitinhoInMemoryRepository = new MitinhoInMemoryRepository()
+    const createMitinhoService = new CreateMitinhoService(mitinhoInMemoryRepository)
+
+    const firstMitinho = {
+      username: 'any_username',
+      email: 'any_email',
+      password: 'any_password'
+    }
+
+    const result = await createMitinhoService.execute(firstMitinho as MitinhoCreate) as MitinhoSave
+
+    const passwordIsEncrypted = await bcrypt.compare(firstMitinho.password, result.password)
+
+    expect(passwordIsEncrypted).toBeTruthy()
   })
 })
