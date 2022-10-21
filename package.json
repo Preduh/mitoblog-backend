@@ -8,7 +8,9 @@
     "test": "vitest",
     "lint": "eslint ./src/**/*.ts --fix",
     "commit": "git-cz",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "build": "npx tsc",
+    "start": "node dist/src/server.js"
   },
   "repository": {
     "type": "git",

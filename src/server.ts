@@ -8,4 +8,4 @@ dotenv.config()
 app.use(express.json())
 app.use(router)
 
-app.listen(8000, () => console.log('Server is running'))
+app.listen(process.env.PORT ?? 8080, () => console.log('Server is running'))
