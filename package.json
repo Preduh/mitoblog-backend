@@ -10,8 +10,7 @@
     "commit": "git-cz",
     "prepare": "husky install",
     "build": "npx tsc",
-    "start": "node dist/src/server.js",
-    "heroku-postbuild": "npx prisma migrate deploy"
+    "start": "node dist/src/server.js"
   },
   "repository": {
     "type": "git",
